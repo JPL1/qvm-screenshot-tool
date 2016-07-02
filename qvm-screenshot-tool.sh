@@ -114,13 +114,13 @@ EOFFILE
 checkscrot()
 {  
    (which scrot &>/dev/null ) || { 
-      scrotnomes="[EXIT] no \"scrot\" tool at dom0 installeted use: \n\nsudo qubed-dom0-update scrot \n\ncommand to add it first"
+      scrotnomes="[EXIT] no \"scrot\" tool at dom0 installed use: \n\nsudo qubed-dom0-update scrot \n\ncommand to add it first"
       echo "$scrotnomes" 
       zenity --info --modal --text "$scrotnomes" &>/dev/null
       exit 1 
    }
 }
-
+# Should below be start_ksnapshot()?
 start_ksnapshoot()
 {
   PID="$(pgrep ksnapshot)"
@@ -130,8 +130,8 @@ start_ksnapshoot()
   fi
   # setGrabMode notes: 0=full-screen, 1=window, 2=region
   #kstart ksnapshot
-  #kdialog --radiolist "Now you can user Spapshot tool to make screenshots. When and only when you will be ready with screenshot (check preview area) click OKEY. Confirm only if you are ready!" READY READY READY --default continue --title "$program" --nograb --noxim  
-  zenity --question --text "Move this mindow away and make screenshot. When you will be ready to upload image click on OK button."
+  #kdialog --radiolist "Now you can user Snapshot tool to make screenshots. When and only when you will be ready with screenshot (check preview area) click OKEY. Confirm only if you are ready!" READY READY READY --default continue --title "$program" --nograb --noxim  
+  zenity --question --text "Move this window away and make screenshot. When you are ready to upload image click OK."
   
   # while [ "$PID" == "" ]; do PID="$(pgrep -n ksnapshot)"; done
 
@@ -145,7 +145,7 @@ start_ksnapshoot()
 
 
  (which zenity &>/dev/null ) || { 
-    scrotnomes="[FATAL] no \"zenity\" tool at dom0 installeted use: \n\nsudo qubed-dom0-update zenity command to add it first"
+    scrotnomes="[FATAL] no \"zenity\" tool at dom0 installed use: \n\nsudo qubed-dom0-update zenity command to add it first"
     echo "$scrotnomes" 
     exit 1 
  }
@@ -159,7 +159,7 @@ while true; do
    d=`date +"%Y-%m-%d-%H%M%S"`
    shotname=$d.png
 
-   ans=$(zenity --list --modal --text "Choose some available mode of capturing \n If you will use:" --radiolist --column "Pick" --column "Option" \
+   ans=$(zenity --list --modal --text "Choose capture mode \n Use:" --radiolist --column "Pick" --column "Option" \
    FALSE Ksnapshot \
    TRUE "Region or Window" \
    FALSE "Fullscreen" \
@@ -186,8 +186,8 @@ while true; do
   then
       echo "[+] Success at dom0. Screenshot saved at $DOM0_SHOTS_DIR/$shotname" || break
   else
-   echo "[ERROR] Something goes wrong and screenshot is not saved at dom0."
-   $(zenity --info --modal --text "Something goes wrong and screenshot is NOT saved at dom0") 
+   echo "[ERROR] Something has gone wrong and screenshot has not been saved at dom0."
+   $(zenity --info --modal --text "Something has gone wrong and screenshot has NOT been saved at dom0") 
    exit 12
   fi
 
@@ -252,7 +252,7 @@ if [ X"$appvm" != X"" ]; then
 
    shot=$shotslist
 
-   echo "[-] coping screenshot to $APPVM_SHOTS_DIR/$shot"
+   echo "[-] copying screenshot to $APPVM_SHOTS_DIR/$shot"
    cat $DOM0_SHOTS_DIR/$shot \
       |qvm-run --pass-io $appvm "cat > $APPVM_SHOTS_DIR/$shot"
 
